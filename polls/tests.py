@@ -23,6 +23,34 @@ class QuestionModelTests(TestCase):
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
 
+    # test voting before publish
+    def test_before_publish_vote(self):
+        pub = timezone.now() + datetime.timedelta(days=5)
+        end = timezone.now() + datetime.timedelta(days=7)
+        unpublished = Question(pub_date=pub, end_date=end)
+        self.assertIs(unpublished.can_vote(), False)
+
+    # test voting after expired
+    def test_after_expired_vote(self):
+        pub = timezone.now() - datetime.timedelta(days=7)
+        end = timezone.now() - datetime.timedelta(days=5)
+        expired = Question(pub_date=pub, end_date=end)
+        self.assertIs(expired.can_vote(), False)
+
+    # test that the poll published
+    def test_published(self):
+        pub = timezone.now() + datetime.timedelta(days=-1)
+        end = timezone.now() + datetime.timedelta(days=5)
+        published = Question(pub_date=pub, end_date=end)
+        self.assertIs(published.is_published(), True)
+
+    # test that the polls not published yet
+    def test_unpublished(self):
+        pub = timezone.now() + datetime.timedelta(days=1)
+        end = timezone.now() + datetime.timedelta(days=5)
+        unpublished = Question(pub_date=pub, end_date=end)
+        self.assertIs(unpublished.is_published(), False)
+
 def create_question(question_text, days):
     """
     Create a question with the given `question_text` and published the
