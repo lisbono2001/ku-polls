@@ -1,10 +1,11 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from .models import Question, Choice
 
 from django.views import generic
+from django.contrib import messages
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
@@ -44,3 +45,11 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+def everynavigate(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if not question.can_vote():
+        messages.warning(request, "Poll expired!")
+        return redirect('polls:index')
+    elif question.can_vote():
+        return render(request, 'polls/detail.html', {'question': question, })
