@@ -15,7 +15,7 @@ class IndexView(generic.ListView):
         return Question.objects.filter(
             pub_date__lte=timezone.now()
             # return last five published polls
-        ).order_by('-end_date')[:5]
+        ).order_by('-end_date')
 
 
 class DetailView(generic.DetailView):
