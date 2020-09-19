@@ -46,10 +46,10 @@ def vote(request, question_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
-def everynavigate(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+def pollsnavigate(request, question_id):
+    question = Question.objects.get(pk = question_id)
     if not question.can_vote():
-        messages.warning(request, "Poll expired!")
+        messages.warning(request, "Poll expired!, please choose another one")
         return redirect('polls:index')
     elif question.can_vote():
         return render(request, 'polls/detail.html', {'question': question, })
