@@ -130,7 +130,7 @@ class QuestionDetailViewTests(TestCase):
                                           days=5, end_date=10)
         url = reverse('polls:detail', args=(future_question.id,))
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
 
     def test_past_question(self):
         """Test that page shown last question detail properly."""
@@ -146,4 +146,4 @@ class QuestionDetailViewTests(TestCase):
                                         days=-5, end_date=3)
         url = reverse('polls:detail', args=(past_question.id,))
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
