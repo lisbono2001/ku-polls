@@ -1,0 +1,7 @@
+ = True
+
+cover_pylib = False
+
+omit =
+    mysite/*
+    polls/migrations/*
