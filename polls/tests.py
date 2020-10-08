@@ -83,7 +83,7 @@ class QuestionIndexViewTests(TestCase):
 
     def test_past_question(self):
         """Test that page shown last question properly."""
-        create_question(question_text="Past question.", days=-30)
+        create_question(question_text="Past question.", days=-30,end_date=-25)
         response = self.client.get(reverse('polls:index'))
         self.assertQuerysetEqual(
             response.context['latest_question_list'],
@@ -143,7 +143,7 @@ class QuestionDetailViewTests(TestCase):
     def test_recent_question(self):
         """Test that page shown recent question detail properly."""
         past_question = create_question(question_text='Past Question.',
-                                        pub_date=-5, end_date=3)
+                                        days=-5, end_date=3)
         url = reverse('polls:detail', args=(past_question.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
