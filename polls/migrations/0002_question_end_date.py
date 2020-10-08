@@ -5,7 +5,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('polls', '0001_initial'),
     ]
@@ -14,7 +13,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='question',
             name='end_date',
-            field=models.DateTimeField(default=django.utils.timezone.now, verbose_name='date expired'),
+            field=models.DateTimeField(default=django.utils.timezone.now,
+                                       verbose_name='date expired'),
             preserve_default=False,
         ),
     ]
