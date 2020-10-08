@@ -1,4 +1,6 @@
- = True
+[run]
+
+branch = True
 
 cover_pylib = False
 
