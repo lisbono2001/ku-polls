@@ -1,0 +1,25 @@
+language: python
+
+python: "3.6"
+
+services: 
+  - mysql
+
+git:
+  depth: 1
+
+install:
+  - pip install -r requirements.txt
+    
+env:
+  - DJANGO=3.1.2 DB=mysql
+    
+before_script:
+  - cp .env.example .env
+  - python manage.py migrate
+
+script:
+  - coverage run manage.py test polls
+
+after_script:
+  - bash <(curl -s https://codecov.io/bash)

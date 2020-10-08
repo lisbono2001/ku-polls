@@ -1,4 +1,5 @@
 # Ku-polls
+[![Build Status](https://travis-ci.com/lisbono2001/ku-polls.svg?branch=master)](https://travis-ci.com/lisbono2001/ku-polls)  
 
 Web-application for the KU community who want to conduct surveys and polls open to the community by implement a [Django application](https://www.djangoproject.com/start/).  
 
