@@ -57,7 +57,7 @@ class QuestionModelTests(TestCase):
         self.assertIs(unpublished.is_published(), False)
 
 
-def create_question(question_text, days):
+def create_question(question_text, days ,end_date):
     """
     Test that a question created properly.
 
@@ -65,8 +65,11 @@ def create_question(question_text, days):
     given number of `days` offset to now (negative for questions published
     in the past, positive for questions that have yet to be published).
     """
-    time = timezone.now() + datetime.timedelta(days=days)
-    return Question.objects.create(question_text=question_text, pub_date=time)
+
+    pub_time = timezone.now() + datetime.timedelta(days=days)
+    end_time = pub_time + datetime.timedelta(days=end_date)
+    return Question.objects.create(question_text=question_text,
+                                   pub_date=pub_time, end_date=end_time)
 
 
 class QuestionIndexViewTests(TestCase):
