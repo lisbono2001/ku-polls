@@ -1,16 +1,20 @@
+"""Admin page modifier, adding objects (Question ,Choice) to admin page."""
 from django.contrib import admin
-
 from .models import Question, Choice
 
 
 # Register your models here.
 
 class ChoiceInline(admin.StackedInline):
+    """Add Choice to admin-Question page and set it's default value."""
+
     model = Choice
     extra = 3
 
 
 class QuestionAdmin(admin.ModelAdmin):
+    """Set the admin page display."""
+
     fieldsets = [
         (None, {'fields': ['question_text']}),
         ('Date information', {'fields': ['pub_date', 'end_date'],
@@ -24,4 +28,3 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Question, QuestionAdmin)
-# admin.site.register(Choice)
