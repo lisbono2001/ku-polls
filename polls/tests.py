@@ -138,7 +138,7 @@ class QuestionDetailViewTests(TestCase):
                                         days=-5, end_date=-3)
         url = reverse('polls:detail', args=(past_question.id,))
         response = self.client.get(url)
-        self.assertContains(response, past_question.question_text)
+        self.assertEqual(response.status_code, 302)
 
     def test_recent_question(self):
         """Test that page shown recent question detail properly."""
