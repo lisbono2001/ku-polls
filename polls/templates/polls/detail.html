@@ -10,4 +10,6 @@
 {% endfor %}
     <button type="button" onclick= location.href="{% url 'polls:index' %}">Back to polls</button>
 <input type="submit" value="Vote">
+
+<p> Your lastest vote : {{last_vote.selected_choice.choice_text}}</p>
 </form>

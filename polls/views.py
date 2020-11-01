@@ -105,9 +105,9 @@ def vote(request, question_id):
 def polls_navigate(request, question_id):
     """Navigate to index if poll expired if not go to its detail."""
     question = Question.objects.get(pk=question_id)
-    last_choice = Vote.objects.filter(question=question, user=request.user).first()
+    last_vote = Vote.objects.filter(question=question, user=request.user).first()
     if not question.can_vote():
         messages.warning(request, "Poll expired!, please choose another one")
         return redirect('polls:index')
     elif question.can_vote():
-        return render(request, 'polls/detail.html', {'question': question,'current_choice': last_choice})
+        return render(request, 'polls/detail.html', {'question': question,'last_vote': last_vote})
