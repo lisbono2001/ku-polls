@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
-from .models import Question, Choice
+from .models import Question, Choice, Vote
 
 from django.views import generic
 from django.contrib import messages
@@ -53,8 +53,7 @@ def vote(request, question_id):
             'error_message': "You didn't select a choice.",
         })
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
+        Vote.objects.update_or_create(user=request.user, question=question, defaults={'selected_choice': selected_choice})
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
@@ -62,11 +61,13 @@ def vote(request, question_id):
                                             args=(question.id,)))
 
 
+@login_required()
 def polls_navigate(request, question_id):
     """Navigate to index if poll expired if not go to its detail."""
     question = Question.objects.get(pk=question_id)
+    last_choice = Vote.objects.filter(question=question, user=request.user).first()
     if not question.can_vote():
         messages.warning(request, "Poll expired!, please choose another one")
         return redirect('polls:index')
     elif question.can_vote():
-        return render(request, 'polls/detail.html', {'question': question, })
+        return render(request, 'polls/detail.html', {'question': question,'current_choice': last_choice})
