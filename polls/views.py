@@ -1,4 +1,5 @@
 """Views for polls app' pages."""
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -40,7 +41,7 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
-
+@login_required()
 def vote(request, question_id):
     """Vote mechanism for polls app."""
     question = get_object_or_404(Question, pk=question_id)
