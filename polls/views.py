@@ -62,7 +62,7 @@ def vote(request, question_id):
                                             args=(question.id,)))
 
 
-def pollsnavigate(request, question_id):
+def polls_navigate(request, question_id):
     """Navigate to index if poll expired if not go to its detail."""
     question = Question.objects.get(pk=question_id)
     if not question.can_vote():
