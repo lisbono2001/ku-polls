@@ -8,6 +8,8 @@
     <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
     <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
 {% endfor %}
-    <button type="button" onclick= location.href="{% url 'polls:index'%}">Back to polls</button>
+    <button type="button" onclick= location.href="{% url 'polls:index' %}">Back to polls</button>
 <input type="submit" value="Vote">
+
+<p> Your lastest vote : {{last_vote.selected_choice.choice_text}}</p>
 </form>

@@ -1,12 +1,51 @@
 """Views for polls app' pages."""
+from datetime import datetime
+import logging
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
+from django.dispatch import receiver
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
-from .models import Question, Choice
+from .models import Question, Choice, Vote
 
 from django.views import generic
 from django.contrib import messages
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("polls")
+
+
+# def get_client_ip(request):
+#     """ Method for getting user’s IP address."""
+#     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+#     if x_forwarded_for:
+#         ip = x_forwarded_for.split(',')[0]
+#     else:
+#         ip = request.META.get('REMOTE_ADDR')
+#     return ip
+# 
+# 
+# @receiver(user_logged_in)
+# def check_login(sender, request, user, **kwargs):
+#     """log when login success"""
+#     log.info("IP address: %s, %s Login at %s", get_client_ip(request),user, str(datetime.now()))
+# 
+# 
+# @receiver(user_login_failed)
+# def check_login_fail(sender, request, **kwargs):
+#     """log when login fail"""
+#     log.warning("IP address: %s:  Trying to Login at %s", 
+#                 get_client_ip(request), str(datetime.now()))
+# 
+# 
+# @receiver(user_logged_out)
+# def check_logout(sender, request, user, **kwargs):
+#     """log when logout success"""
+#     log.info("IP address: %s, %s Logout at %s", 
+#              get_client_ip(request), user, str(datetime.now()))
 
 
 class IndexView(generic.ListView):
@@ -40,7 +79,7 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
-
+@login_required()
 def vote(request, question_id):
     """Vote mechanism for polls app."""
     question = get_object_or_404(Question, pk=question_id)
@@ -52,20 +91,23 @@ def vote(request, question_id):
             'error_message': "You didn't select a choice.",
         })
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
+        Vote.objects.update_or_create(user=request.user, question=question, defaults={'selected_choice': selected_choice})
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
+        log_vote = logging.getLogger("polls")
+        log_vote.info("%s, Poll's ID: %d, at: %s.", request.user, question_id, str(datetime.now()))
         return HttpResponseRedirect(reverse('polls:results',
                                             args=(question.id,)))
 
 
-def pollsnavigate(request, question_id):
+@login_required()
+def polls_navigate(request, question_id):
     """Navigate to index if poll expired if not go to its detail."""
     question = Question.objects.get(pk=question_id)
+    last_vote = Vote.objects.filter(question=question, user=request.user).first()
     if not question.can_vote():
         messages.warning(request, "Poll expired!, please choose another one")
         return redirect('polls:index')
     elif question.can_vote():
-        return render(request, 'polls/detail.html', {'question': question, })
+        return render(request, 'polls/detail.html', {'question': question,'last_vote': last_vote})

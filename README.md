@@ -7,6 +7,7 @@ Web-application for the KU community who want to conduct surveys and polls open 
 ### Project Iterations  
 * [Iteration 1 Plan](https://github.com/lisbono2001/ku-polls/wiki/Iteration-1-Plan)
 * [Iteration 2 Plan](https://github.com/lisbono2001/ku-polls/wiki/Iteration-2-Plan)
+* [Iteration 3 Plan](https://github.com/lisbono2001/ku-polls/wiki/Iteration-3-Plan)
 
 
 
