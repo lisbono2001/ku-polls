@@ -1,3 +1,4 @@
+decouple
 coverage
 python-decouple
 django
