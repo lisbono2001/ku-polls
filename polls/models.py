@@ -13,6 +13,7 @@ class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     end_date = models.DateTimeField("date expired", default=None, null=True)
+    last_vote = last_vote = models.CharField(max_length=200, default="")
 
     def __str__(self):
         """Return question's text."""

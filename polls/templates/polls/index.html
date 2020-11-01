@@ -1,4 +1,6 @@
-<p>User: {{ user.get_username }}</p>
+<p>User: {{ user.get_username }}</p> 
+<a href="{% url 'login'%}?next={{request.path}}">Login</a>
+<a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
