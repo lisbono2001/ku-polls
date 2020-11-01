@@ -18,34 +18,34 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("polls")
 
 
-def get_client_ip(request):
-    """ Method for getting user’s IP address."""
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-
-@receiver(user_logged_in)
-def check_login(sender, request, user, **kwargs):
-    """log when login success"""
-    log.info("IP address: %s, %s Login at %s", get_client_ip(request),user, str(datetime.now()))
-
-
-@receiver(user_login_failed)
-def check_login_fail(sender, request, **kwargs):
-    """log when login fail"""
-    log.warning("IP address: %s:  Trying to Login at %s", 
-                get_client_ip(request), str(datetime.now()))
-
-
-@receiver(user_logged_out)
-def check_logout(sender, request, user, **kwargs):
-    """log when logout success"""
-    log.info("IP address: %s, %s Logout at %s", 
-             get_client_ip(request), user, str(datetime.now()))
+# def get_client_ip(request):
+#     """ Method for getting user’s IP address."""
+#     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+#     if x_forwarded_for:
+#         ip = x_forwarded_for.split(',')[0]
+#     else:
+#         ip = request.META.get('REMOTE_ADDR')
+#     return ip
+# 
+# 
+# @receiver(user_logged_in)
+# def check_login(sender, request, user, **kwargs):
+#     """log when login success"""
+#     log.info("IP address: %s, %s Login at %s", get_client_ip(request),user, str(datetime.now()))
+# 
+# 
+# @receiver(user_login_failed)
+# def check_login_fail(sender, request, **kwargs):
+#     """log when login fail"""
+#     log.warning("IP address: %s:  Trying to Login at %s", 
+#                 get_client_ip(request), str(datetime.now()))
+# 
+# 
+# @receiver(user_logged_out)
+# def check_logout(sender, request, user, **kwargs):
+#     """log when logout success"""
+#     log.info("IP address: %s, %s Logout at %s", 
+#              get_client_ip(request), user, str(datetime.now()))
 
 
 class IndexView(generic.ListView):
