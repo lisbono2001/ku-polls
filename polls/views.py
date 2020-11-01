@@ -1,5 +1,10 @@
 """Views for polls app' pages."""
+import datetime
+import logging
+
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import user_logged_in, user_logged_out, user_login_failed
+from django.dispatch import receiver
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -8,6 +13,40 @@ from .models import Question, Choice, Vote
 
 from django.views import generic
 from django.contrib import messages
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("polls")
+
+
+def get_client_ip(request):
+    """ Method for getting user’s IP address."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+@receiver(user_logged_in)
+def check_login(request, user, **kwargs):
+    """log when login success"""
+    log.info("IP address: %s, %s Login at %s", get_client_ip(request), 
+             user, str(datetime.now())
+
+
+@receiver(user_login_failed)
+def check_login_fail(request, **kwargs):
+    """log when login fail"""
+    log.warning("IP address: %s:  Trying to Login at %s", 
+                get_client_ip(request), str(datetime.now())
+
+
+@receiver(user_logged_out)
+def check_logout(request, user, **kwargs):
+    """log when logout success"""
+    log.info("IP address: %s, %s Logout at %s", 
+             get_client_ip(request), user, str(datetime.now()))
 
 
 class IndexView(generic.ListView):
@@ -57,6 +96,9 @@ def vote(request, question_id):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
+        date = datetime.now()
+        log_vote = logging.getLogger("polls")
+        log_vote.info("%s, Poll's ID: %d, at: %s.", request.user, question_id, str(date))
         return HttpResponseRedirect(reverse('polls:results',
                                             args=(question.id,)))
 
